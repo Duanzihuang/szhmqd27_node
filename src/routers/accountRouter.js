@@ -12,6 +12,8 @@ const accountController = require(path.join(__dirname,"../controllers/accountCon
 
 // 获取注册页面的请求
 accountRouter.get('/register',accountController.getRegisterPage)
+// 注册
+accountRouter.post('/register',accountController.register)
 
 // 导出路由对象
 module.exports = accountRouter
