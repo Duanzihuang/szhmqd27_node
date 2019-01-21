@@ -18,6 +18,8 @@ accountRouter.post('/register',accountController.register)
 accountRouter.get('/login',accountController.getLoginPage)
 // 获取验证码
 accountRouter.get('/vcode',accountController.getVcodeImage)
+// 登录操作
+accountRouter.post('/login',accountController.login)
 
 // 导出路由对象
 module.exports = accountRouter

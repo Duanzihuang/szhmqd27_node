@@ -1,6 +1,6 @@
 const path = require("path");
 const MongoClient = require("mongodb").MongoClient;
-const captchapng = require('captchapng')
+const captchapng = require("captchapng");
 // Connection URL
 const url = "mongodb://localhost:27017";
 
@@ -83,7 +83,7 @@ exports.getLoginPage = (req, res) => {
 exports.getVcodeImage = (req, res) => {
   const vcode = parseInt(Math.random() * 9000 + 1000);
   // 把vcode保存到session对象中去，方便将来登录
-  req.session.vcode = vcode
+  req.session.vcode = vcode;
   var p = new captchapng(80, 30, vcode); // width,height,numeric captcha
   p.color(0, 0, 0, 0); // First color: background (red, green, blue, alpha)
   p.color(80, 80, 80, 255); // Second color: paint (red, green, blue, alpha)
@@ -97,6 +97,44 @@ exports.getVcodeImage = (req, res) => {
 };
 
 // 导出登录的方法
-exports.login = (req,res) => {
+exports.login = (req, res) => {
+  const result = {
+    status: 0,
+    message: "登录成功"
+  };
   // 把浏览器传递过来的验证码 和 req.session.vcode 中的验证码对比
-}
+  const { username, password, vcode } = req.body;
+  // 验证验证码
+  if (vcode != req.session.vcode) {
+    result.status = 1;
+    result.message = "验证码错误";
+
+    res.json(result);
+    return;
+  }
+
+  // 验证码正确了
+  // Use connect method to connect to the server
+  MongoClient.connect(
+    url,
+    { useNewUrlParser: true },
+    function(err, client) {
+      // 拿到db对象
+      const db = client.db(dbName);
+
+      // 要到要操作的集合 accountInfo
+      const collection = db.collection("accountInfo");
+
+      // 根据用户名或是密码查询
+      collection.findOne({ username, password }, (err, doc) => {
+        if (!doc) {
+          result.status = 2;
+          result.message = "用户名或是密码错误";
+        }
+
+        client.close();
+        res.json(result);
+      });
+    }
+  );
+};
