@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Duanzihuang/szhmqd27_node#readme",
   "dependencies": {
+    "art-template": "^4.13.2",
     "body-parser": "^1.18.3",
     "captchapng": "0.0.1",
     "express": "^4.16.4",
