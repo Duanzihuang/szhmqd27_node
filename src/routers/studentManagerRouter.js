@@ -11,7 +11,14 @@ const studentManagerController = require(path.join(
 ));
 
 //处理请求
+// 获取学生列表
 studentManagerRouter.get("/list", studentManagerController.getStudentListPage);
+
+// 获取新增页面
+studentManagerRouter.get("/add", studentManagerController.getAddStudentPage);
+
+// 新增学生信息
+studentManagerRouter.post("/add", studentManagerController.addStudent);
 
 //导出
 module.exports = studentManagerRouter;

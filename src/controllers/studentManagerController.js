@@ -19,6 +19,30 @@ const getStudentListPage = (req, res) => {
   })
 };
 
+/**
+ * 返回新增页面
+ */
+const getAddStudentPage = (req,res) => {
+  const html = template(path.join(__dirname, "../public/views/add.html"),{})
+  console.log(html)
+  res.send(html)
+}
+
+/**
+ * 新增学生信息
+ */
+const addStudent = (req,res)=>{
+  databasetool.insertSingle('studentInfo',req.body,(err,result)=>{
+    if(!result){ //失败
+      res.send(`<script>alert("插入失败!")</script>`)
+    } else {
+      res.send(`<script>location.href='/studentmanager/list'</script>`)
+    }
+  })
+}
+
 module.exports = {
-  getStudentListPage
+  getStudentListPage,
+  getAddStudentPage,
+  addStudent
 };
