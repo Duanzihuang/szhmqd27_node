@@ -94,8 +94,21 @@ exports.login = (req, res) => {
     if (!doc) {
       result.status = 2;
       result.message = "用户名或是密码错误";
+    } else { //登录ok
+      req.session.loginedName = username
     }
 
     res.json(result);
   });
 };
+
+/**
+ * 注销操作
+ */
+exports.logout = (req,res) => {
+  // 清空session中的用户名
+  req.session.loginedName = null
+
+  // 要浏览器跳转登录页面
+  res.send('<script>location.href="/account/login"</script>')
+}
