@@ -1,17 +1,18 @@
 //导包
 const express = require("express");
 const path = require("path");
-var bodyParser = require("body-parser");
+// var bodyParser = require("body-parser");
 var session = require("express-session");
+const querystring = require('querystring')
 
 //创建app
 const app = express();
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
 // Use the session middleware
 app.use(
@@ -37,6 +38,24 @@ app.all('/*',(req,res,next)=>{
     } else {
       res.send(`<script>alert('您还没有登录，请先登录!');location.href='/account/login'</script>`)
     }
+  }
+})
+
+// 自己手工写的中间件
+app.use('/*',(req,res,next)=>{
+  if(req.method === 'POST'){ //POST请求
+    let body = ''
+    req.on('data',chunk=>{
+      body += chunk
+    })
+
+    req.on('end',()=>{
+      req.body = querystring.parse(body)
+      
+      next()
+    })
+  } else { //GET
+    next()
   }
 })
 
