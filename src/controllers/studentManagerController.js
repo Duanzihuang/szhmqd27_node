@@ -31,7 +31,6 @@ const getStudentListPage = (req, res) => {
  */
 const getAddStudentPage = (req, res) => {
   const html = template(path.join(__dirname, "../public/views/add.html"), {});
-  console.log(html);
   res.send(html);
 };
 
@@ -71,7 +70,7 @@ const editStudent = (req, res) => {
   const _id = databasetool.ObjectId(req.params.studentId);
 
   databasetool.updateYige("studentInfo", { _id }, req.body, (err, result) => {
-    if (!result) {
+    if (result.modifiedCount !== 1) {
       //失败
       res.send(`<script>alert("修改失败!")</script>`);
     } else {
@@ -80,10 +79,28 @@ const editStudent = (req, res) => {
   });
 };
 
+/**
+ * 删除学生
+ */
+const deleteStudent = (req,res) => {
+  // 必须按照它规定的处理，你才能拿到数据_id值
+  const _id = databasetool.ObjectId(req.params.studentId);
+
+  databasetool.deleteYige('studentInfo',{_id},(err,result)=>{
+    if (!result) {
+      //失败
+      res.send(`<script>alert("删除失败!")</script>`);
+    } else {
+      res.send(`<script>location.href='/studentmanager/list'</script>`);
+    }
+  })
+}
+
 module.exports = {
   getStudentListPage,
   getAddStudentPage,
   addStudent,
   getEditStudentPage,
-  editStudent
+  editStudent,
+  deleteStudent
 };
